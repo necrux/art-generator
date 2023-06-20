@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 from flask import Flask
 from flask_smorest import Api
-from resources.resume import blp as ResumeBlueprint
+from resources.art import blp as ResumeBlueprint
 
 app = Flask(__name__)
 
 app.config["PROPAGATE_EXCEPTIONS"] = True
-app.config["API_TITLE"] = "Wes' Resume - REST API"
+app.config["API_TITLE"] = "CSS Art Generator"
 app.config["API_VERSION"] = "v1"
 app.config["OPENAPI_VERSION"] = "3.0.3"
 app.config["OPENAPI_URL_PREFIX"] = "/"
