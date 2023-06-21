@@ -1,8 +1,8 @@
 import configparser
 import openai
-import requests
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from bs4 import BeautifulSoup
 
 blp = Blueprint("Resume", __name__, description="CSS Art Generator")
 
@@ -12,6 +12,7 @@ config = configparser.RawConfigParser()
 config.read(AUTH_FILE)
 
 api_key = config["openai"]["key"]
+openai.api_key = api_key
 
 
 @blp.route("/")
@@ -48,5 +49,17 @@ class Welcome(MethodView):
 @blp.route("/art/v1/<string:subject>/<string:style>")
 class Section(MethodView):
     def get(self, subject, style):
-        prompt = f"Generate a {subject} in a {style} style using purely HTML and CSS."
-        return api_key
+        prompt = f"Generate a {subject} in a {style} style using purely HTML and CSS. " \
+                 f"The code must be fully functional."
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt},
+                {"role": "system", "content": "You are and expert on CSS art "
+                                              "and your responses only contain valid HTML code."}
+            ]
+        )
+        #soup = BeautifulSoup(response.choices[0].message.content, "html.parser")
+        #html = soup.find(name="html")
+        #return html
+        return response.choices[0].message.content
