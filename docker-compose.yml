@@ -1,5 +1,5 @@
 services:
-  resume:
+  art-generator:
     build: .
     ports:
       - "80:5000"
